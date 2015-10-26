@@ -38,9 +38,11 @@ class Map:
 class Enemy_Arrow:
     def __init__(self):
         global stage
-        self.x, self.y = 900, 100
+        self.x, self.y = 900, 82
         self.frame = 0
-        self.image = load_image('animation_sheet.png')
+        self.image = load_image('archur_moving.png')
+        self.attack_image= load_image('archur_attack.png')
+        self.dead_image = load_image('archur_dead.png')
         self.arrow_image = load_image('arrow.png')
         self.hp = 50 * stage
         self.atk = 100 * stage
@@ -50,8 +52,12 @@ class Enemy_Arrow:
         self.arrow_up = True
         self.arrow_attack = False
         self.arrow_frame= 0
+        self.dead_time = 0
+        self.arrow_attack_frame = 0
     def arrow_animation(self):
         self.arrow_x -= 10
+        if self.arrow_attack_frame < 8:
+            self.arrow_attack_frame = self.arrow_attack_frame+1
         if self.arrow_y < 125 and self.arrow_up:
             self.arrow_frame = 0
         elif self.arrow_y < 160 and self.arrow_up:
@@ -84,15 +90,17 @@ class Enemy_Arrow:
                 self.arrow_y = 700
                 self.arrow_up = True
                 self.attack_time = 0
-        if self.arrow_y<=90:
+                self.arrow_attack_frame = 0
+        if self.arrow_y<=82:
             self.arrow_attack = False
             self.arrow_x = 900
             self.arrow_y = 700
             self.arrow_up = True
+            self.arrow_attack_frame = 0
 
     def update(self):
         global enemy_count, go,attack,object,team,pever
-        self.frame = (self.frame +1) % 8
+
         self.attack_time += 1
         if pever==1 and self.atk != 10:
             self.atk = 10
@@ -102,18 +110,22 @@ class Enemy_Arrow:
                 if self.arrow_attack == True:
                     self.arrow_animation()
         if self.hp <= 0:
-            self.x = 800
-            self.hp = 100
+            self.dead_time+=1
             self.arrow_frame = 0
             self.arrow_x = 900
             self.arrow_y = 700
             self.arrow_up = True
             self.attack_time = 0
             self.arrow_attack = False
+            if self.dead_time>=6:
+                self.x=800
+                self.hp = 100
+                self.dead_time=0
         if self.arrow_attack == True:
                 self.arrow_animation()
         if self.x > 500:
             self.x -= 10
+            self.frame = (self.frame +1) % 10
         else:
             self.attack_time += 1
             if self.attack_time >= 50:
@@ -129,9 +141,13 @@ class Enemy_Arrow:
 
 
     def draw(self):
-        self.image.clip_draw(self.frame*100,0,100,100,self.x,self.y)
         if self.arrow_attack:
             self.arrow_image.clip_draw(self.arrow_frame*80,0,80,80,self.arrow_x,self.arrow_y)
+            self.attack_image.clip_draw(self.arrow_attack_frame*50,0,50,72,self.x,self.y)
+        elif self.hp<=0:
+            self.dead_image.clip_draw(self.dead_time*48,0,48,72,self.x,self.y)
+        else:
+            self.image.clip_draw(self.frame*45,0,45,72,self.x,self.y)
 
 
 class Grass:
@@ -151,12 +167,22 @@ class Grass:
 class Enemy:
     def __init__(self):
         global stage
-        self.x, self.y = 900, 100
+        self.x, self.y = 900, 89
         self.frame = 0
-        self.image = load_image('animation_sheet.png')
+        self.image = load_image('knight_moving.png')
+        self.attack_image = load_image('knight_attack.png')
+        self.dead_image = load_image('knight_dead.png')
         self.hp = 100 * stage
         self.atk = 100 * stage
         self.attack_time = 0
+        self.attack_frame = 0
+        self.attack_check = False
+        self.dead_frame = 0
+    def knight_attack(self):
+        self.attack_frame += 1
+        if self.attack_frame>=11:
+            self.attack_check = False
+            self.attack_frame = 0
     def update(self):
         global enemy_count, go,attack,object,team,pever
         self.frame = (self.frame +1) % 8
@@ -167,19 +193,25 @@ class Enemy:
         if go:
                 self.x -= 10
         if self.hp <= 0:
-            self.x = 800
-            self.hp = 100
+            self.dead_frame+=1
             self.attack_time = 0
+            if self.dead_frame>=8:
+                self.hp = 100
+                self.dead_frame = 0
+                self.x = 800
         if self.x == 300:
             enemy_count+=1
         if self.x > 250:
             self.x -= 10
         else:
             self.attack_time += 1
-            if self.attack_time >= 50:
+            if self.attack_time >= 40:
                 self.attack_time = 0
+            if self.attack_check:
+                self.knight_attack()
             if self.x<=250:
                 go = False
+                self.frame = 0
                 for object in team:
                     if object.num == 2:
                         if attack:
@@ -188,8 +220,15 @@ class Enemy:
                         if self.attack_time >= 30:
                             object.hp -= self.atk
                             self.attack_time = 0
+                            self.attack_check = True
+
     def draw(self):
-        self.image.clip_draw(self.frame*100,0,100,100,self.x,self.y)
+        if self.attack_check:
+            self.attack_image.clip_draw(self.attack_frame*108,0,108,88,self.x,self.y)
+        elif self.hp<=0:
+            self.dead_image.clip_draw(self.dead_frame*96,0,96,88,self.x,self.y)
+        else:
+            self.image.clip_draw(self.frame*64,0,64,88,self.x,self.y)
 
 
 class Object:
@@ -339,7 +378,7 @@ def main():
         handle_events()
         update()
         draw()
-        delay(0.05)
+        delay(0.06)
     exit()
 
 if __name__ == '__main__':
