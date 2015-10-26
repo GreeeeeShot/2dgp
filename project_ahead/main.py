@@ -26,7 +26,7 @@ class Map:
     def update(self):
         global pever,running
         if go:
-            self.moving_x+=2
+            self.moving_x+=4
         if self.moving_x >= 500:
             pever = 1
         if self.moving_x >= 670:
@@ -260,7 +260,7 @@ class Object:
         if go:
             self.frame = (self.frame +1) % 6
         if self.num == 2 and pever == 0:
-            self.atk = 20
+            self.atk = 30
     def attack_animation(self):
         self.attack_frame += 1
         if self.attack_frame >= 5:
@@ -311,7 +311,7 @@ def enter():
     global map, grass1,grass2, team,num,go,enemy,stage,enemy_army,enemy_arrow,pever_time,pever, game_time
     open_canvas()
     team = [Object() for i in range(3)]
-    enemy_army = [Enemy() for j in range(3)]
+    enemy_army = [Enemy() for j in range(1)]
     go = False
     game_time = 100
     pever_time = Pever_Time()
