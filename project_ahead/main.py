@@ -311,7 +311,7 @@ def enter():
     global map, grass1,grass2, team,num,go,enemy,stage,enemy_army,enemy_arrow,pever_time,pever, game_time
     open_canvas()
     team = [Object() for i in range(3)]
-    enemy_army = [Enemy() for j in range(1)]
+    enemy_army = [Enemy() for j in range(2)]
     go = False
     game_time = 100
     pever_time = Pever_Time()
