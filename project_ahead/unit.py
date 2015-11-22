@@ -18,6 +18,8 @@ class Unit:
         self.total_frames = 0.0
         self.state = self.STAND
         self.attack_frame = 0
+        self.atk = 10
+        self.hp = 100
         if Unit.run_image == None:
             Unit.run_image = load_image('player_run.png')
         if Unit.stand_image == None:
@@ -34,23 +36,33 @@ class Unit:
         self.run_frame = int(self.total_frames) % 6
         self.stand_frame = int(self.total_frames) % 4
         if self.state == self.ATTACK:
-            self.attack_frame=(self.attack_frame+1)%120
+            self.attack()
 
+    def attack_damage(self,enemy):
+        if self.state == self.ATTACK :
+            enemy.hp -= self.atk
+
+    def attack(self):
+        self.attack_frame+=1
+        if self.attack_frame>=120:
+            self.state = self.STAND
+            self.attack_frame = 0
 
     def draw(self):
         if self.state == self.RUN:
-            self.run_image.clip_draw(self.run_frame*40,0,40,46,self.x+50,self.y)
+            self.run_image.clip_draw(self.run_frame*40,0,40,46,self.x,self.y)
         elif self.state == self.STAND:
-            self.stand_image.clip_draw(self.stand_frame*40,0,40,45,self.x+50,self.y)
+            self.stand_image.clip_draw(self.stand_frame*40,0,40,45,self.x,self.y)
         elif self.state == self.ATTACK:
-            self.attack_image.clip_draw((int)(self.attack_frame/30)*80,0,80,45,self.x+50,self.y)
+            self.attack_image.clip_draw((int)(self.attack_frame/30)*80,0,80,45,self.x,self.y)
+        self.draw_bb()
 
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - 50, self.y - 50, self.x + 50, self.y + 50
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
 
     def handle_event(self, event):
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
@@ -61,7 +73,4 @@ class Unit:
                 self.state = self.ATTACK
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_RIGHT):
             if self.state in (self.RUN,):
-                self.state = self.STAND
-        elif (event.type, event.key) == (SDL_KEYUP, SDLK_z):
-            if self.state in (self.ATTACK,):
                 self.state = self.STAND

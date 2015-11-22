@@ -28,6 +28,12 @@ class Background:
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_RIGHT: self.speed += Background.SCROLL_SPEED_PPS
+            if event.key == SDLK_RIGHT:
+                self.speed += Background.SCROLL_SPEED_PPS
+            elif event.key == SDLK_z:
+                if self.speed>0:
+                    self.speed -= Background.SCROLL_SPEED_PPS
         if event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT: self.speed -= Background.SCROLL_SPEED_PPS
+            if event.key == SDLK_RIGHT:
+                if self.speed>0:
+                    self.speed -= Background.SCROLL_SPEED_PPS

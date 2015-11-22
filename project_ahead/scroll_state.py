@@ -14,6 +14,7 @@ name = "scroll_state"
 unit = None
 background = None
 enemy_knight = None
+unit_attack = False
 
 def create_world():
     global unit, background,enemy_knight
@@ -48,6 +49,7 @@ def resume():
 
 
 def handle_events(frame_time):
+    global unit_attack
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -58,6 +60,8 @@ def handle_events(frame_time):
             else:
                 unit.handle_event(event)
                 background.handle_event(event)
+                if not collide(enemy_knight,unit):
+                    enemy_knight.handle_event(event)
 
 
 
@@ -69,7 +73,11 @@ def update(frame_time):
         if unit.state == unit.RUN:
             unit.state = unit.STAND
         if enemy_knight.state == enemy_knight.RUN:
-            unit.state = enemy_knight.STAND
+            enemy_knight.state = enemy_knight.STAND
+        background.speed = 0
+        unit.attack_damage(enemy_knight)
+        enemy_knight.speed=0
+
 
 
 
@@ -79,5 +87,6 @@ def draw(frame_time):
     background.draw()
     unit.draw()
     enemy_knight.draw()
+    unit_attack = False
     update_canvas()
 
