@@ -10,6 +10,7 @@ class Unit:
     run_image = None
     stand_image =None
     attack_image = None
+
     RUN, STAND, ATTACK = 0, 1, 2
 
     def __init__(self):
@@ -19,7 +20,8 @@ class Unit:
         self.state = self.STAND
         self.attack_frame = 0
         self.atk = 10
-        self.hp = 100
+        self.hp = 30000
+        self.check_run = False
         if Unit.run_image == None:
             Unit.run_image = load_image('player_run.png')
         if Unit.stand_image == None:
@@ -37,6 +39,7 @@ class Unit:
         self.stand_frame = int(self.total_frames) % 4
         if self.state == self.ATTACK:
             self.attack()
+        print(self.hp)
 
     def attack_damage(self,enemy):
         if self.state == self.ATTACK :
@@ -45,7 +48,10 @@ class Unit:
     def attack(self):
         self.attack_frame+=1
         if self.attack_frame>=120:
-            self.state = self.STAND
+            if self.check_run:
+                self.state = self.RUN
+            else:
+                self.state = self.STAND
             self.attack_frame = 0
 
     def draw(self):
@@ -66,11 +72,16 @@ class Unit:
 
     def handle_event(self, event):
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT):
+            self.check_run = True
             if self.state in (self.STAND, self.ATTACK):
                 self.state = self.RUN
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_z):
             if self.state in (self.STAND, self.RUN):
                 self.state = self.ATTACK
         elif (event.type, event.key) == (SDL_KEYUP, SDLK_RIGHT):
-            if self.state in (self.RUN,):
+            self.check_run = False
+            if self.state in (self.RUN,self.ATTACK):
                 self.state = self.STAND
+        elif (event.type, event.key) == (SDL_KEYUP, SDLK_z):
+            if self.check_run:
+                self.state = self.RUN

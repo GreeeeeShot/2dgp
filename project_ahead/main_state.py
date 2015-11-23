@@ -3,38 +3,53 @@ from pico2d import *
 import game_framework
 
 
-from unit import Unit
+from unit import Unit # import Boy class from boy.py
 from background import Background
 from enemy import Enemy_Knight
-
-
+from collision import collide
+from enemy import Enemy_Archur
+from enemy import Arrow
+from morale import Morale
+from ingame_time import Ingame_Time
+from mini_map import Mini_Map
 
 name = "main_state"
 
 unit = None
 background = None
 enemy_knight = None
+enemy_archur = None
+arrow = None
+unit_attack = False
+morale = None
+ingame_time = None
+mini_map = None
 
 def create_world():
-    global unit, background,enemy_knight
-
+    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map
     unit = Unit()
-    background = Background()
+    background = Background(800, 400)
     enemy_knight = Enemy_Knight()
-
+    enemy_archur = Enemy_Archur()
+    arrow = Arrow()
+    morale = Morale()
+    ingame_time = Ingame_Time()
+    mini_map = Mini_Map()
 
 def destroy_world():
-    global unit, background,enemy_knight
-
+    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map
     del(unit)
+    del(morale)
+    del(arrow)
+    del(ingame_time)
     del(background)
     del(enemy_knight)
-
+    del(enemy_archur)
+    del(mini_map)
 
 
 def enter():
-    open_canvas()
-    hide_cursor()
+    open_canvas(800, 400)
     game_framework.reset_time()
     create_world()
 
@@ -47,12 +62,12 @@ def exit():
 def pause():
     pass
 
-
 def resume():
     pass
 
 
 def handle_events(frame_time):
+    global unit_attack
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -61,37 +76,69 @@ def handle_events(frame_time):
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             else:
-                boy.handle_event(event)
-
-
-
-def collide(a, b):
-    left_a, bottom_a, right_a, top_a = a.get_bb()
-    left_b, bottom_b, right_b, top_b = b.get_bb()
-
-    if left_a > right_b: return False
-    if right_a < left_b: return False
-    if top_a < bottom_b: return False
-    if bottom_a > top_b: return False
-
-    return True
+                unit.handle_event(event)
+                mini_map.handle_event(event,unit)
+                if not collide(enemy_knight,unit) and not collide(enemy_archur,unit):
+                    background.handle_event(event)
+                    enemy_knight.handle_event(event)
+                    enemy_archur.handle_event(event)
 
 
 def update(frame_time):
-    unit.update(frame_time)
+    if collide(enemy_knight,unit):
+        if unit.state == unit.RUN:
+            unit.state = unit.STAND
+        if enemy_knight.state == enemy_knight.RUN:
+            enemy_knight.state = enemy_knight.STAND
+        if enemy_archur.state in (enemy_archur.STAND,enemy_archur.ATTACK):
+            enemy_archur.speed=0
+        background.speed = 0
+        unit.attack_damage(enemy_knight)
+        enemy_knight.speed=0
+        if enemy_knight.state == enemy_knight.ATTACK:
+            enemy_knight.attack_damage(unit)
+    if collide(enemy_archur,unit):
+        if unit.state == unit.RUN:
+            unit.state = unit.STAND
+        if enemy_archur.state == enemy_archur.RUN:
+            enemy_archur.state = enemy_archur.STAND
+        background.speed = 0
+        unit.attack_damage(enemy_archur)
+        enemy_archur.speed=0
+    elif enemy_archur.x <= 500 and enemy_archur.state == enemy_archur.RUN:
+        enemy_archur.state = enemy_archur.STAND
+        enemy_archur.speed -= Enemy_Archur.TIME_PER_ACTION
     enemy_knight.update(frame_time)
+    enemy_archur.update(frame_time)
+    background.update(frame_time)
+    unit.update(frame_time)
+    arrow.update(frame_time)
+    if enemy_archur.state == Enemy_Archur.ATTACK:
+        arrow.state = Arrow.ATTACK
+        arrow.x=enemy_archur.x
+        arrow.y=enemy_archur.y
+        arrow.draw_frame = 0
+        arrow.arrow_up = True
+    if collide(arrow,unit):
+        arrow.state = arrow.REST
+        enemy_archur.attack_damage(unit)
+    ingame_time.update(frame_time,morale)
+    mini_map.update(frame_time)
+
+
+
 
 
 def draw(frame_time):
     clear_canvas()
     background.draw()
+    morale.draw()
     unit.draw()
     enemy_knight.draw()
-
+    enemy_archur.draw()
+    arrow.draw()
+    ingame_time.draw()
+    mini_map.draw()
     update_canvas()
-
-
-
-
 
 
