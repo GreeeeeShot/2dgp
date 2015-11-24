@@ -39,7 +39,6 @@ class Unit:
         self.stand_frame = int(self.total_frames) % 4
         if self.state == self.ATTACK:
             self.attack()
-        print(self.hp)
 
     def attack_damage(self,enemy):
         if self.state == self.ATTACK :

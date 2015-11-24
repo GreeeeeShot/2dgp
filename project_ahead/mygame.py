@@ -2,8 +2,8 @@ import cProfile
 
 import game_framework
 
-import main_state as main_state
+import start_state
 #import tile_state as main_state
 
-game_framework.run(main_state)
+game_framework.run(start_state)
 

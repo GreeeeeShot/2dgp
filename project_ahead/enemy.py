@@ -23,6 +23,7 @@ class Enemy_Knight:
         self.atk = 2
         self.wait = 0.0
         self.hp = 3000
+        self.check_dead = False
         if Enemy_Knight.run_image == None:
             Enemy_Knight.run_image = load_image('knight_run.png')
         if Enemy_Knight.stand_image == None:
@@ -42,7 +43,7 @@ class Enemy_Knight:
             self.x -= self.speed
         if self.hp <=0:
             self.state = self.DEAD
-            self.dead()
+            self.check_dead = self.dead()
         if self.state == self.ATTACK:
             self.attack()
         if self.wait == 0.0 :
@@ -51,6 +52,9 @@ class Enemy_Knight:
             self.state = self.ATTACK
             self.attack_frame = 0
             self.wait =int(self.total_frames)
+        if self.check_dead:
+            self.check_dead=False
+            return True
 
 
     def draw(self):
@@ -73,6 +77,7 @@ class Enemy_Knight:
             self.hp=3000
             self.speed = Enemy_Knight.TIME_PER_ACTION
             self.wait = 0.0
+            return True
 
     def attack_damage(self,unit):
         unit.hp -= self.atk
@@ -94,14 +99,14 @@ class Enemy_Knight:
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
                 if self.speed>0:
-                    self.speed += Enemy_Knight.TIME_PER_ACTION*2
+                    self.speed += Enemy_Knight.TIME_PER_ACTION
             # if event.key == SDLK_z:
             #     if self.speed>=Enemy_Knight.TIME_PER_ACTION*2:
             #         self.speed -= Enemy_Knight.TIME_PER_ACTION
         if event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
                 if self.speed>Enemy_Knight.TIME_PER_ACTION:
-                    self.speed -= Enemy_Knight.TIME_PER_ACTION*2
+                    self.speed -= Enemy_Knight.TIME_PER_ACTION
 
 class Enemy_Archur:
     TIME_PER_ACTION = 0.5
@@ -124,6 +129,7 @@ class Enemy_Archur:
         self.atk = 1
         self.wait = 0.0
         self.hp = 3000
+        self.check_dead = False
         if Enemy_Archur.run_image == None:
             Enemy_Archur.run_image = load_image('archur_run.png')
         if Enemy_Archur.stand_image == None:
@@ -133,7 +139,7 @@ class Enemy_Archur:
         if Enemy_Archur.dead_image == None:
             Enemy_Archur.dead_image = load_image('archur_dead.png')
 
-    def update(self, frame_time):
+    def update(self, frame_time,):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
         self.total_frames += Enemy_Archur.FRAMES_PER_ACTION * Enemy_Archur.ACTION_PER_TIME * frame_time
@@ -143,7 +149,7 @@ class Enemy_Archur:
         self.x -= self.speed
         if self.hp <=0:
             self.state = self.DEAD
-            self.dead()
+            self.check_dead = self.dead()
         if self.state == self.ATTACK:
             self.attack()
         if self.wait == 0.0 :
@@ -152,6 +158,9 @@ class Enemy_Archur:
             self.state = self.ATTACK
             self.attack_frame = 0
             self.wait =int(self.total_frames)
+        if self.check_dead:
+            self.check_dead=False
+            return True
 
     def draw(self):
         if self.state == self.RUN:
@@ -173,6 +182,7 @@ class Enemy_Archur:
             self.hp=3000
             self.speed = Enemy_Archur.TIME_PER_ACTION
             self.wait = 0.0
+            return True
 
     def attack_damage(self,unit):
         unit.hp -= self.atk
@@ -194,11 +204,11 @@ class Enemy_Archur:
         if event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
                 if self.speed>=0:
-                    self.speed += Enemy_Archur.TIME_PER_ACTION*2
+                    self.speed += Enemy_Archur.TIME_PER_ACTION
         if event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
                 if self.speed>=Enemy_Archur.TIME_PER_ACTION:
-                    self.speed -= Enemy_Archur.TIME_PER_ACTION*2
+                    self.speed -= Enemy_Archur.TIME_PER_ACTION
 
 class Arrow:
     TIME_PER_ACTION = 0.5
