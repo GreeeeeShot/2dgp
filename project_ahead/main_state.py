@@ -136,7 +136,7 @@ def update(frame_time):
         enemy_archur.attack_damage(unit)
     ingame_time.update(frame_time,morale)
     mini_map.update(frame_time,morale,ingame_time)
-    if (morale.state == morale.FAIL) and (morale.image != morale.SUCCEESS):
+    if (morale.state == morale.FAIL) and (morale.image != morale.SUCCESS):
         morale.morale_fail(unit)
     if (morale.state == morale.SUCCESS) and (morale.image != morale.FAIL):
         morale.morale_success(unit)
