@@ -213,7 +213,7 @@ class Enemy_Archur:
 class Arrow:
     TIME_PER_ACTION = 0.5
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-    FRAMES_PER_ACTION = 8
+    FRAMES_PER_ACTION = 7
 
     image = None
 

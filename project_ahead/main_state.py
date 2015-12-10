@@ -13,6 +13,7 @@ from morale import Morale
 from ingame_time import Ingame_Time
 from mini_map import Mini_Map
 from count_killed import Count_Killed
+from stage_view import Stage_View
 
 name = "main_state"
 
@@ -26,10 +27,12 @@ morale = None
 ingame_time = None
 mini_map = None
 count_killed = None
+stage_view = None
 
 def create_world():
-    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed
+    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed,stage_view
     unit = Unit()
+    stage_view = Stage_View()
     background = Background(800, 400)
     enemy_knight = Enemy_Knight()
     enemy_archur = Enemy_Archur()
@@ -40,8 +43,9 @@ def create_world():
     count_killed = Count_Killed()
 
 def destroy_world():
-    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed
+    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed,stage_view
     del(unit)
+    del(stage_view)
     del(morale)
     del(count_killed)
     del(arrow)
@@ -155,6 +159,7 @@ def draw(frame_time):
     ingame_time.draw()
     mini_map.draw()
     count_killed.draw()
+    stage_view.draw(frame_time,1)
     update_canvas()
 
 

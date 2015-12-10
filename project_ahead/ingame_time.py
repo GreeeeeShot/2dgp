@@ -26,8 +26,9 @@ class Ingame_Time:
             self.stop()
 
     def draw(self):
-        self.num_image.clip_draw((int((self.stage-(self.total_frames-self.start_time)/10))%10)*16,0,16,32,750,350)
-        self.num_image.clip_draw((int((self.stage-(self.total_frames-self.start_time)/10)/10))*16,0,16,32,730,350)
+        self.num_image.clip_draw((int((self.stage-(self.total_frames-self.start_time)/10))%10)*16,0,16,32,770,350)
+        self.num_image.clip_draw((int((self.stage-(self.total_frames-self.start_time)/10)/10))*16,0,16,32,750,350)
+        self.num_image.clip_draw((int((self.stage-(self.total_frames-self.start_time)/100)/100))*16,0,16,32,730,350)
 
     def stop(self):
         self.run_time = False
