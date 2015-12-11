@@ -13,6 +13,7 @@ class Enemy_Knight:
     dead_image =None
     speed=TIME_PER_ACTION
     RUN, STAND, ATTACK, DEAD = 0, 1, 2, 3
+    hp_image = None
 
     def __init__(self):
         self.x, self.y = 700, 70
@@ -32,6 +33,9 @@ class Enemy_Knight:
             Enemy_Knight.attack_image = load_image('knight_attack.png')
         if Enemy_Knight.dead_image == None:
             Enemy_Knight.dead_image = load_image('knight_dead.png')
+        if Enemy_Knight.hp_image == None :
+           Enemy_Knight.hp_image = load_image('hp_bar.png')
+        self.first_hp = self.hp
 
     def update(self, frame_time):
         def clamp(minimum, x, maximum):
@@ -42,6 +46,7 @@ class Enemy_Knight:
         if self.state == self.RUN:
             self.x -= self.speed
         if self.hp <=0:
+            self.hp=0;
             self.state = self.DEAD
             self.check_dead = self.dead()
         if self.state == self.ATTACK:
@@ -67,6 +72,8 @@ class Enemy_Knight:
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*96,0,96,88,self.x,self.y)
         self.draw_bb()
+        Enemy_Knight.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/100),100,(self.first_hp-self.hp)/100,10)
+        Enemy_Knight.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,100,(self.hp/100),10)
 
     def dead(self):
         self.dead_frame=int(self.total_frames-self.wait)%9
@@ -119,6 +126,7 @@ class Enemy_Archur:
     dead_image =None
     speed=TIME_PER_ACTION
     RUN, STAND, ATTACK, DEAD = 0, 1, 2, 3
+    hp_image = None
 
     def __init__(self):
         self.x, self.y = 700, 70
@@ -138,6 +146,9 @@ class Enemy_Archur:
             Enemy_Archur.attack_image = load_image('archur_attack.png')
         if Enemy_Archur.dead_image == None:
             Enemy_Archur.dead_image = load_image('archur_dead.png')
+        if Enemy_Archur.hp_image == None :
+           Enemy_Archur.hp_image = load_image('hp_bar.png')
+        self.first_hp = self.hp
 
     def update(self, frame_time,):
         def clamp(minimum, x, maximum):
@@ -172,6 +183,8 @@ class Enemy_Archur:
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*48,0,48,72,self.x,self.y)
         self.draw_bb()
+        Enemy_Archur.hp_image.clip_draw_to_origin(10,0,10,10,self.x-10+(self.hp/100),110,(self.first_hp-self.hp)/100,10)
+        Enemy_Archur.hp_image.clip_draw_to_origin(0,0,10,10,self.x-10,110,(self.hp/100),10)
 
     def dead(self):
         self.dead_frame=int(self.total_frames-self.wait)%7

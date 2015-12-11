@@ -13,6 +13,8 @@ class Unit:
 
     RUN, STAND, ATTACK = 0, 1, 2
 
+    hp_image = None
+
     def __init__(self):
         self.x, self.y = 240, 50
         self.frame = random.randint(0, 5)
@@ -28,6 +30,9 @@ class Unit:
             Unit.stand_image = load_image('player_stand.png')
         if Unit.attack_image == None:
             Unit.attack_image = load_image('player_attack.png')
+        if Unit.hp_image == None :
+           Unit.hp_image = load_image('hp_bar.png')
+        self.first_hp = self.hp
 
 
     def update(self, frame_time):
@@ -41,7 +46,7 @@ class Unit:
             self.attack()
 
     def attack_damage(self,enemy):
-        if self.state == self.ATTACK :
+        if self.state == self.ATTACK and enemy.hp>0 :
             enemy.hp -= self.atk
 
     def attack(self):
@@ -61,6 +66,8 @@ class Unit:
         elif self.state == self.ATTACK:
             self.attack_image.clip_draw((int)(self.attack_frame/30)*80,0,80,45,self.x,self.y)
         self.draw_bb()
+        Unit.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/800),80,(self.first_hp-self.hp)/800,10)
+        Unit.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,80,(self.hp/800),10)
 
 
     def draw_bb(self):

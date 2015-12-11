@@ -17,8 +17,9 @@ class Morale:
             Morale.success_image = load_image("pever.png")
 
     def morale_success(self,unit):
-        unit.hp = 500
+        unit.hp = 50000
         unit.atk = 50
+        unit.first_hp = 50000
         self.image = Morale.SUCCESS
         self.state = Morale.CHALLINGE
 
