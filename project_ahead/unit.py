@@ -24,7 +24,7 @@ class Unit:
         self.attack_frame = 0
         self.dead_frame = 0
         self.atk = 10
-        self.hp = 30000
+        self.hp = 35000
         self.check_run = False
         self.wait = 0.0
         if Unit.run_image == None:
@@ -40,7 +40,7 @@ class Unit:
             Unit.dead_image = load_image('player_dead.png')
 
 
-    def update(self, frame_time):
+    def update(self, frame_time,stage):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
 
@@ -52,7 +52,7 @@ class Unit:
         if self.hp<=0:
            if  self.wait == 0.0 :
                 self.wait=self.total_frames
-           self.dead()
+           self.dead(stage)
 
 
     def attack_damage(self,enemy):
@@ -104,10 +104,12 @@ class Unit:
             if self.check_run:
                 self.state = self.RUN
 
-    def dead(self):
+    def dead(self,stage):
         self.dead_frame = (int)(self.total_frames - self.wait)%4
         self.state = Unit.DEAD
         if self.dead_frame>=3:
-            self.hp = 30000
+            self.hp = stage*40000
+            self.atk = stage*5+5
+            self.first_hp = self.hp
             self.dead_frame = 0
             self.state = self.STAND

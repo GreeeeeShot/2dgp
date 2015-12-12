@@ -37,7 +37,7 @@ class Enemy_Knight:
            Enemy_Knight.hp_image = load_image('hp_bar.png')
         self.first_hp = self.hp
 
-    def update(self, frame_time):
+    def update(self, frame_time,stage):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
         self.total_frames += Enemy_Knight.FRAMES_PER_ACTION * Enemy_Knight.ACTION_PER_TIME * frame_time
@@ -48,12 +48,12 @@ class Enemy_Knight:
         if self.hp <=0:
             self.hp=0;
             self.state = self.DEAD
-            self.check_dead = self.dead()
+            self.check_dead = self.dead(stage)
         if self.state == self.ATTACK:
             self.attack()
         if self.wait == 0.0 :
             self.wait = int(self.total_frames)
-        if (int(self.total_frames-self.wait) >= 20) and (self.wait != 0.0) and (self.state == self.STAND) :
+        if (int(self.total_frames-self.wait) >= int(40/self.atk)) and (self.wait != 0.0) and (self.state == self.STAND) :
             self.state = self.ATTACK
             self.attack_frame = 0
             self.wait =int(self.total_frames)
@@ -72,16 +72,18 @@ class Enemy_Knight:
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*96,0,96,88,self.x,self.y)
         self.draw_bb()
-        Enemy_Knight.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/100),100,(self.first_hp-self.hp)/100,10)
-        Enemy_Knight.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,100,(self.hp/100),10)
+        Enemy_Knight.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/500),100,(self.first_hp-self.hp)/500,10)
+        Enemy_Knight.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,100,(self.hp/500),10)
 
-    def dead(self):
+    def dead(self,stage):
         self.dead_frame=int(self.total_frames-self.wait)%9
         if self.dead_frame>=8:
             self.dead_frame = 0
             self.state = self.RUN
             self.x = 800
-            self.hp=3000
+            self.hp=(stage-1)*5000+3000
+            self.atk = stage*1
+            self.first_hp = self.hp
             self.speed = Enemy_Knight.TIME_PER_ACTION
             self.wait = 0.0
             return True
@@ -125,7 +127,7 @@ class Enemy_Archur:
     attack_image = None
     dead_image =None
     speed=TIME_PER_ACTION
-    RUN, STAND, ATTACK, DEAD = 0, 1, 2, 3
+    RUN, STAND, ATTACK1, ATTACK2, DEAD = 0, 1, 2, 3, 4
     hp_image = None
 
     def __init__(self):
@@ -137,6 +139,7 @@ class Enemy_Archur:
         self.atk = 1
         self.wait = 0.0
         self.hp = 3000
+        self.attack_num = True
         self.check_dead = False
         if Enemy_Archur.run_image == None:
             Enemy_Archur.run_image = load_image('archur_run.png')
@@ -150,7 +153,7 @@ class Enemy_Archur:
            Enemy_Archur.hp_image = load_image('hp_bar.png')
         self.first_hp = self.hp
 
-    def update(self, frame_time,):
+    def update(self, frame_time,stage):
         def clamp(minimum, x, maximum):
             return max(minimum, min(x, maximum))
         self.total_frames += Enemy_Archur.FRAMES_PER_ACTION * Enemy_Archur.ACTION_PER_TIME * frame_time
@@ -160,13 +163,18 @@ class Enemy_Archur:
         self.x -= self.speed
         if self.hp <=0:
             self.state = self.DEAD
-            self.check_dead = self.dead()
-        if self.state == self.ATTACK:
+            self.check_dead = self.dead(stage)
+        if self.state == self.ATTACK1 or self.state == self.ATTACK2:
             self.attack()
         if self.wait == 0.0 :
             self.wait = int(self.total_frames)
-        if (int(self.total_frames-self.wait) >= 50) and (self.wait != 0.0) and (self.state == self.STAND) :
-            self.state = self.ATTACK
+        if (int(self.total_frames-self.wait) >= int(50/self.atk)) and (self.wait != 0.0) and (self.state == self.STAND) :
+            if self.attack_num:
+                self.state = self.ATTACK1
+                self.attack_num = False
+            else:
+                self.state = self.ATTACK2
+                self.attack_num = True
             self.attack_frame = 0
             self.wait =int(self.total_frames)
         if self.check_dead:
@@ -178,21 +186,23 @@ class Enemy_Archur:
             self.run_image.clip_draw(self.run_frame*45,0,45,72,self.x,self.y)
         elif self.state == self.STAND:
             self.stand_image.clip_draw(self.stand_frame*38,0,38,72,self.x,self.y)
-        elif self.state == self.ATTACK:
+        elif self.state == self.ATTACK1 or self.state == self.ATTACK2:
             self.attack_image.clip_draw(self.attack_frame*50,0,50,72,self.x,self.y)
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*48,0,48,72,self.x,self.y)
         self.draw_bb()
-        Enemy_Archur.hp_image.clip_draw_to_origin(10,0,10,10,self.x-10+(self.hp/100),110,(self.first_hp-self.hp)/100,10)
-        Enemy_Archur.hp_image.clip_draw_to_origin(0,0,10,10,self.x-10,110,(self.hp/100),10)
+        Enemy_Archur.hp_image.clip_draw_to_origin(10,0,10,10,self.x-10+(self.hp/500),110,(self.first_hp-self.hp)/500,10)
+        Enemy_Archur.hp_image.clip_draw_to_origin(0,0,10,10,self.x-10,110,(self.hp/500),10)
 
-    def dead(self):
+    def dead(self,stage):
         self.dead_frame=int(self.total_frames-self.wait)%7
         if self.dead_frame>=6:
             self.dead_frame = 0
             self.state = self.RUN
             self.x = 800
-            self.hp=3000
+            self.hp = (stage-1)*5000+3000
+            self.atk = stage*1
+            self.first_hp = self.hp
             self.speed = Enemy_Archur.TIME_PER_ACTION
             self.wait = 0.0
             return True

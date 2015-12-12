@@ -21,7 +21,8 @@ unit = None
 background = None
 enemy_knight = None
 enemy_archur = None
-arrow = None
+arrow1 = None
+arrow2 = None
 unit_attack = False
 morale = None
 ingame_time = None
@@ -30,25 +31,27 @@ count_killed = None
 stage_view = None
 
 def create_world():
-    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed,stage_view
+    global unit, background,enemy_knight,enemy_archur,arrow1,arrow2,morale,ingame_time,mini_map,count_killed,stage_view
     unit = Unit()
     stage_view = Stage_View()
     background = Background(800, 400)
     enemy_knight = Enemy_Knight()
     enemy_archur = Enemy_Archur()
-    arrow = Arrow()
+    arrow1 = Arrow()
+    arrow2 = Arrow()
     morale = Morale()
     ingame_time = Ingame_Time()
     mini_map = Mini_Map()
     count_killed = Count_Killed()
 
 def destroy_world():
-    global unit, background,enemy_knight,enemy_archur,arrow,morale,ingame_time,mini_map,count_killed,stage_view
+    global unit, background,enemy_knight,enemy_archur,arrow1,arrow2,morale,ingame_time,mini_map,count_killed,stage_view
     del(unit)
     del(stage_view)
     del(morale)
     del(count_killed)
-    del(arrow)
+    del(arrow1)
+    del(arrow2)
     del(ingame_time)
     del(background)
     del(enemy_knight)
@@ -84,8 +87,6 @@ def handle_events(frame_time):
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             else:
-                if ((event.type, event.key) == (SDL_KEYDOWN, SDLK_RIGHT)) and mini_map.position_x>=680:
-                    game_framework.quit()
                 unit.handle_event(event)
                 mini_map.handle_event(event,unit)
                 if not collide(enemy_knight,unit) and not collide(enemy_archur,unit):
@@ -100,7 +101,7 @@ def update(frame_time):
             unit.state = unit.STAND
         if enemy_knight.state == enemy_knight.RUN:
             enemy_knight.state = enemy_knight.STAND
-        if enemy_archur.state in (enemy_archur.STAND,enemy_archur.ATTACK):
+        if enemy_archur.state in (enemy_archur.STAND,enemy_archur.ATTACK1,enemy_archur.ATTACK2):
             enemy_archur.speed=0
         if mini_map.state == mini_map.RUN:
             mini_map.state = mini_map.STAND
@@ -122,28 +123,77 @@ def update(frame_time):
     elif enemy_archur.x <= 500 and enemy_archur.state == enemy_archur.RUN:
         enemy_archur.state = enemy_archur.STAND
         enemy_archur.speed -= Enemy_Archur.TIME_PER_ACTION
-    if enemy_knight.update(frame_time):
+    if enemy_knight.update(frame_time,mini_map.stage):
         count_killed.count()
-    if enemy_archur.update(frame_time):
+    if enemy_archur.update(frame_time,mini_map.stage):
         count_killed.count()
     background.update(frame_time)
-    unit.update(frame_time)
-    arrow.update(frame_time)
-    if enemy_archur.state == Enemy_Archur.ATTACK:
-        arrow.state = Arrow.ATTACK
-        arrow.x=enemy_archur.x
-        arrow.y=enemy_archur.y
-        arrow.draw_frame = 0
-        arrow.arrow_up = True
-    if collide(arrow,unit):
-        arrow.state = arrow.REST
+    unit.update(frame_time,mini_map.stage)
+
+    arrow1.update(frame_time)
+
+    if enemy_archur.state == Enemy_Archur.ATTACK1:
+        arrow1.state = Arrow.ATTACK
+        arrow1.x=enemy_archur.x
+        arrow1.y=enemy_archur.y
+        arrow1.draw_frame = 0
+        arrow1.arrow_up = True
+    if collide(arrow1,unit):
+        arrow1.state = arrow1.REST
         enemy_archur.attack_damage(unit)
+
+    arrow2.update(frame_time)
+    if enemy_archur.state == Enemy_Archur.ATTACK2:
+        arrow2.state = Arrow.ATTACK
+        arrow2.x=enemy_archur.x
+        arrow2.y=enemy_archur.y
+        arrow2.draw_frame = 0
+        arrow2.arrow_up = True
+    if collide(arrow2,unit):
+        arrow2.state = arrow2.REST
+        enemy_archur.attack_damage(unit)
+
     ingame_time.update(frame_time,morale)
     mini_map.update(frame_time,morale,ingame_time)
     if (morale.state == morale.FAIL) and (morale.image != morale.SUCCESS):
         morale.morale_fail(unit)
     if (morale.state == morale.SUCCESS) and (morale.image != morale.FAIL):
         morale.morale_success(unit)
+
+    if mini_map.position_x>=680 and mini_map.stage<4:
+        mini_map.stage += 1
+        enemy_knight.atk = mini_map.stage*1
+        enemy_knight.hp = (mini_map.stage-1)*5000+3000
+        enemy_archur.atk = mini_map.stage*1
+        enemy_archur.hp = (mini_map.stage-1)*5000+3000
+        morale.image = 0
+        unit.atk = mini_map.stage * 5+ 5
+        unit.hp = mini_map.stage * 35000
+        unit.frist_hp = unit.hp
+        mini_map.position_x = 120
+        mini_map.position_y = 320
+        mini_map.state = Mini_Map.STAND
+        mini_map.speed = 0
+        mini_map.total_frames = 0.0
+        enemy_knight.x, enemy_knight.y = 700, 70
+        enemy_archur.x, enemy_archur.y = 700, 70
+        stage_view.total_frame = 0.0
+        ingame_time.start_time = -1.0
+        ingame_time.total_frames = 0.0
+        if mini_map.stage == 2:
+            ingame_time.stage = Ingame_Time.STAGE2
+        if mini_map.stage == 3:
+            ingame_time.stage = Ingame_Time.STAGE3
+        if mini_map.stage == 4:
+            ingame_time.stage = Ingame_Time.STAGE4
+        ingame_time.run_time = True
+        background.speed = 0
+        background.left = 0
+        background.screen_width = 800
+        background.screen_height = 400
+        enemy_knight.first_hp = enemy_knight.hp
+        enemy_archur.first_hp = enemy_archur.hp
+
 
 
 
@@ -155,11 +205,12 @@ def draw(frame_time):
     unit.draw()
     enemy_knight.draw()
     enemy_archur.draw()
-    arrow.draw()
+    arrow1.draw()
+    arrow2.draw()
     ingame_time.draw()
     mini_map.draw()
     count_killed.draw()
-    stage_view.draw(frame_time,1)
+    stage_view.draw(frame_time,mini_map.stage)
     update_canvas()
 
 

@@ -43,6 +43,7 @@ class Mini_Map:
                 ingame_time.stop()
 
 
+
     def draw(self):
         self.stage1_image.clip_draw(0,0,600,100,400,340)
         self.position_image.clip_draw(0,0,22,24,self.position_x,self.position_y)
