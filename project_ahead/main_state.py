@@ -182,10 +182,19 @@ def update(frame_time):
         ingame_time.total_frames = 0.0
         if mini_map.stage == 2:
             ingame_time.stage = Ingame_Time.STAGE2
+            background.bgm1.stop()
+            background.bgm2.set_volume(64)
+            background.bgm2.repeat_play()
         if mini_map.stage == 3:
             ingame_time.stage = Ingame_Time.STAGE3
+            background.bgm2.stop()
+            background.bgm3.set_volume(64)
+            background.bgm3.repeat_play()
         if mini_map.stage == 4:
             ingame_time.stage = Ingame_Time.STAGE4
+            background.bgm3.stop()
+            background.bgm4.set_volume(64)
+            background.bgm4.repeat_play()
         ingame_time.run_time = True
         background.speed = 0
         background.left = 0
