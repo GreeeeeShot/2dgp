@@ -16,15 +16,15 @@ class Mini_Map:
     def __init__(self):
         self.stage = Mini_Map.STAGE1
         if Mini_Map.stage1_image == None:
-            Mini_Map.stage1_image = load_image("map.png")
+            Mini_Map.stage1_image = load_image("./image/map.png")
         if Mini_Map.stage2_image == None:
-            Mini_Map.stage2_image = load_image("map.png")
+            Mini_Map.stage2_image = load_image("./image/map2.png")
         if Mini_Map.stage3_image == None:
-            Mini_Map.stage3_image = load_image("map.png")
+            Mini_Map.stage3_image = load_image("./image/map3.png")
         if Mini_Map.stage4_image == None:
-            Mini_Map.stage4_image = load_image("map.png")
+            Mini_Map.stage4_image = load_image("./image/map4.png")
         if Mini_Map.position_image == None:
-            Mini_Map.position_image = load_image("moving.png")
+            Mini_Map.position_image = load_image("./image/moving.png")
         self.position_x = 120
         self.position_y = 320
         self.total_frames = 0.0
@@ -45,7 +45,14 @@ class Mini_Map:
 
 
     def draw(self):
-        self.stage1_image.clip_draw(0,0,600,100,400,340)
+        if self.stage==1:
+            self.stage1_image.clip_draw(0,0,600,100,400,340)
+        if self.stage==2:
+            self.stage2_image.clip_draw(0,0,600,100,400,340)
+        if self.stage==3:
+            self.stage3_image.clip_draw(0,0,600,100,400,340)
+        if self.stage==4:
+            self.stage4_image.clip_draw(0,0,600,100,400,340)
         self.position_image.clip_draw(0,0,22,24,self.position_x,self.position_y)
 
     def handle_event(self, event, unit):

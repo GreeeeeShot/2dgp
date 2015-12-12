@@ -12,19 +12,36 @@ class Background:
     SCROLL_SPEED_PPS_1 = (SCROLL_SPEED_MPS * PIXEL_PER_METER)
 
     def __init__(self, w, h):
-        self.image = load_image('background.png') # 960x272
+        self.image1 = load_image('./image/background.png') # 960x272
+        self.image2 = load_image('./image/background2.png')
+        self.image3 = load_image('./image/background3.png')
+        self.image4 = load_image('./image/background4.png')
         self.speed = 0
         self.left = 0
         self.screen_width = w
         self.screen_height = h
 
-    def draw(self):
+    def draw(self,stage):
         x=int(self.left)
-        w = min(self.image.w - x, self.screen_width)
-        self.image.clip_draw_to_origin(x,0,w,self.screen_height,0,0)
-        self.image.clip_draw_to_origin(0,0,self.screen_width-w,self.screen_height,w,0)
+        if stage == 1:
+            w = min(self.image1.w - x, self.screen_width)
+            self.image1.clip_draw_to_origin(x,0,w,self.screen_height,0,0)
+            self.image1.clip_draw_to_origin(0,0,self.screen_width-w,self.screen_height,w,0)
+        elif stage == 2:
+            w = min(self.image2.w - x, self.screen_width)
+            self.image2.clip_draw_to_origin(x,0,w,self.screen_height,0,0)
+            self.image2.clip_draw_to_origin(0,0,self.screen_width-w,self.screen_height,w,0)
+        elif stage == 3:
+            w = min(self.image3.w - x, self.screen_width)
+            self.image3.clip_draw_to_origin(x,0,w,self.screen_height,0,0)
+            self.image3.clip_draw_to_origin(0,0,self.screen_width-w,self.screen_height,w,0)
+        elif stage == 4:
+            w = min(self.image4.w - x, self.screen_width)
+            self.image4.clip_draw_to_origin(x,0,w,self.screen_height,0,0)
+            self.image4.clip_draw_to_origin(0,0,self.screen_width-w,self.screen_height,w,0)
+
     def update(self, frame_time):
-        self.left = (self.left + frame_time * self.speed) % self.image.w
+        self.left = (self.left + frame_time * self.speed) % self.image1.w
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:

@@ -6,7 +6,7 @@ class Ingame_Time:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
     num_image = None
-    STAGE1 , STAGE2, STAGE3, STAGE4 = 40 , 60 , 80 , 100
+    STAGE1 , STAGE2, STAGE3, STAGE4 = 40 , 50 , 50 , 55
 
     def __init__(self):
         self.start_time = -1.0
@@ -14,7 +14,7 @@ class Ingame_Time:
         self.stage = Ingame_Time.STAGE1
         self.run_time = True
         if Ingame_Time.num_image == None:
-            Ingame_Time.num_image = load_image("num.png")
+            Ingame_Time.num_image = load_image("./image/num.png")
 
     def update(self,frame_time,morale):
         if self.run_time :

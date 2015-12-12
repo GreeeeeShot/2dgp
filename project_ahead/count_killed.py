@@ -6,7 +6,7 @@ class Count_Killed:
     def __init__(self):
         self.ck = 0
         if Count_Killed.num_image == None:
-            Count_Killed.num_image = load_image("num.png")
+            Count_Killed.num_image = load_image("./image/num.png")
 
     def count(self):
         self.ck += 1

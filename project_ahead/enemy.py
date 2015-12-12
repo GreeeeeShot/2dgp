@@ -26,15 +26,15 @@ class Enemy_Knight:
         self.hp = 3000
         self.check_dead = False
         if Enemy_Knight.run_image == None:
-            Enemy_Knight.run_image = load_image('knight_run.png')
+            Enemy_Knight.run_image = load_image('./image/knight_run.png')
         if Enemy_Knight.stand_image == None:
-            Enemy_Knight.stand_image = load_image('knight_stand.png')
+            Enemy_Knight.stand_image = load_image('./image/knight_stand.png')
         if Enemy_Knight.attack_image == None:
-            Enemy_Knight.attack_image = load_image('knight_attack.png')
+            Enemy_Knight.attack_image = load_image('./image/knight_attack.png')
         if Enemy_Knight.dead_image == None:
-            Enemy_Knight.dead_image = load_image('knight_dead.png')
+            Enemy_Knight.dead_image = load_image('./image/knight_dead.png')
         if Enemy_Knight.hp_image == None :
-           Enemy_Knight.hp_image = load_image('hp_bar.png')
+           Enemy_Knight.hp_image = load_image('./image/hp_bar.png')
         self.first_hp = self.hp
 
     def update(self, frame_time,stage):
@@ -142,15 +142,15 @@ class Enemy_Archur:
         self.attack_num = True
         self.check_dead = False
         if Enemy_Archur.run_image == None:
-            Enemy_Archur.run_image = load_image('archur_run.png')
+            Enemy_Archur.run_image = load_image('./image/archur_run.png')
         if Enemy_Archur.stand_image == None:
-            Enemy_Archur.stand_image = load_image('archur_stand.png')
+            Enemy_Archur.stand_image = load_image('./image/archur_stand.png')
         if Enemy_Archur.attack_image == None:
-            Enemy_Archur.attack_image = load_image('archur_attack.png')
+            Enemy_Archur.attack_image = load_image('./image/archur_attack.png')
         if Enemy_Archur.dead_image == None:
-            Enemy_Archur.dead_image = load_image('archur_dead.png')
+            Enemy_Archur.dead_image = load_image('./image/archur_dead.png')
         if Enemy_Archur.hp_image == None :
-           Enemy_Archur.hp_image = load_image('hp_bar.png')
+           Enemy_Archur.hp_image = load_image('./image/hp_bar.png')
         self.first_hp = self.hp
 
     def update(self, frame_time,stage):
@@ -252,7 +252,7 @@ class Arrow:
         self.start_time = 0.0
         self.state = Arrow.REST
         if Arrow.image == None:
-            Arrow.image = load_image("arrow.png")
+            Arrow.image = load_image("./image/arrow.png")
 
 
     def update(self,frame_time):

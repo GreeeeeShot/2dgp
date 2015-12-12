@@ -28,16 +28,16 @@ class Unit:
         self.check_run = False
         self.wait = 0.0
         if Unit.run_image == None:
-            Unit.run_image = load_image('player_run.png')
+            Unit.run_image = load_image('./image/player_run.png')
         if Unit.stand_image == None:
-            Unit.stand_image = load_image('player_stand.png')
+            Unit.stand_image = load_image('./image/player_stand.png')
         if Unit.attack_image == None:
-            Unit.attack_image = load_image('player_attack.png')
+            Unit.attack_image = load_image('./image/player_attack.png')
         if Unit.hp_image == None :
-           Unit.hp_image = load_image('hp_bar.png')
+           Unit.hp_image = load_image('./image/hp_bar.png')
         self.first_hp = self.hp
         if Unit.dead_image == None:
-            Unit.dead_image = load_image('player_dead.png')
+            Unit.dead_image = load_image('./image/player_dead.png')
 
 
     def update(self, frame_time,stage):
@@ -108,7 +108,7 @@ class Unit:
         self.dead_frame = (int)(self.total_frames - self.wait)%4
         self.state = Unit.DEAD
         if self.dead_frame>=3:
-            self.hp = stage*40000
+            self.hp = stage*45000
             self.atk = stage*5+5
             self.first_hp = self.hp
             self.dead_frame = 0

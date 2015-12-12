@@ -12,9 +12,9 @@ class Morale:
         self.state = Morale.CHALLINGE
         self.image = 0
         if Morale.fail_image == None:
-            Morale.fail_image = load_image("fail.png")
+            Morale.fail_image = load_image("./image/fail.png")
         if Morale.success_image == None:
-            Morale.success_image = load_image("pever.png")
+            Morale.success_image = load_image("./image/pever.png")
 
     def morale_success(self,unit):
         unit.hp = 50000
@@ -24,7 +24,7 @@ class Morale:
         self.state = Morale.CHALLINGE
 
     def morale_fail(self,unit):
-        unit.atk = 10
+        unit.atk = 5
         self.image = Morale.FAIL
         self.state = Morale.CHALLINGE
 

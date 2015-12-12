@@ -200,7 +200,7 @@ def update(frame_time):
 
 def draw(frame_time):
     clear_canvas()
-    background.draw()
+    background.draw(mini_map.stage)
     morale.draw()
     unit.draw()
     enemy_knight.draw()
