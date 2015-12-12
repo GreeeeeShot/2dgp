@@ -6,7 +6,7 @@ class Ingame_Time:
     ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
     FRAMES_PER_ACTION = 8
     num_image = None
-    STAGE1 , STAGE2, STAGE3, STAGE4 = 60 , 80 , 100 , 120
+    STAGE1 , STAGE2, STAGE3, STAGE4 = 40 , 60 , 80 , 100
 
     def __init__(self):
         self.start_time = -1.0

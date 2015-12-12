@@ -169,7 +169,7 @@ def update(frame_time):
         morale.image = 0
         unit.atk = mini_map.stage * 5+ 5
         unit.hp = mini_map.stage * 35000
-        unit.frist_hp = unit.hp
+        unit.first_hp = unit.hp
         mini_map.position_x = 120
         mini_map.position_y = 320
         mini_map.state = Mini_Map.STAND

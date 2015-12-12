@@ -16,4 +16,5 @@ class Count_Killed:
 
     def draw(self):
         self.num_image.clip_draw((self.ck%10)*16,0,16,32,50,350)
-        self.num_image.clip_draw(int(self.ck/10)*16,0,16,32,35,350)
+        self.num_image.clip_draw((int(self.ck/10)%10)*16,0,16,32,35,350)
+        self.num_image.clip_draw(int(self.ck/100)*16,0,16,32,20,350)
