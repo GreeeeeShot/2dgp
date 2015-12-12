@@ -27,6 +27,10 @@ class Unit:
         self.hp = 35000
         self.check_run = False
         self.wait = 0.0
+        self.hit_sound = load_wav('./bgm/hit.ogg')
+        self.walk_sound = load_wav('./bgm/walk.wav')
+        self.dead_sound = load_wav('./bgm/death1.wav')
+        self.attack_sound = load_wav('./bgm/attack1.wav')
         if Unit.run_image == None:
             Unit.run_image = load_image('./image/player_run.png')
         if Unit.stand_image == None:
@@ -58,9 +62,11 @@ class Unit:
     def attack_damage(self,enemy):
         if self.state == self.ATTACK and enemy.hp>0 :
             enemy.hp -= self.atk
+            self.hit_sound.play(1)
 
     def attack(self):
         self.attack_frame+=1
+        self.attack_sound.play(1)
         if self.attack_frame>=120:
             if self.check_run:
                 self.state = self.RUN
@@ -77,7 +83,6 @@ class Unit:
             self.attack_image.clip_draw((int)(self.attack_frame/30)*80,0,80,45,self.x,self.y)
         elif self.state == self.DEAD:
             self.dead_image.clip_draw(self.dead_frame*52,0,52,44,self.x,self.y)
-        self.draw_bb()
         Unit.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/800),80,(self.first_hp-self.hp)/800,10)
         Unit.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,80,(self.hp/800),10)
 
@@ -105,11 +110,15 @@ class Unit:
                 self.state = self.RUN
 
     def dead(self,stage):
-        self.dead_frame = (int)(self.total_frames - self.wait)%4
-        self.state = Unit.DEAD
-        if self.dead_frame>=3:
-            self.hp = stage*45000
-            self.atk = stage*5+5
-            self.first_hp = self.hp
-            self.dead_frame = 0
-            self.state = self.STAND
+        if self.dead_frame>=2:
+            self.dead_frame=2
+            # self.hp = stage*45000
+            # self.atk = stage*5+5
+            # self.first_hp = self.hp
+            # self.state = self.STAND
+        else:
+            self.dead_frame = (int)(self.total_frames - self.wait)%4
+            self.state = Unit.DEAD
+            if self.dead_frame==0:
+                self.dead_sound.play(1)
+

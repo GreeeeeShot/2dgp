@@ -24,6 +24,9 @@ class Enemy_Knight:
         self.atk = 2
         self.wait = 0.0
         self.hp = 3000
+        self.hit_sound = load_wav('./bgm/hit.ogg')
+        self.dead_sound = load_wav('./bgm/death2.wav')
+        self.attack_sound = load_wav('./bgm/attack2.wav')
         self.check_dead = False
         if Enemy_Knight.run_image == None:
             Enemy_Knight.run_image = load_image('./image/knight_run.png')
@@ -71,13 +74,13 @@ class Enemy_Knight:
             self.attack_image.clip_draw(self.attack_frame*108,0,108,88,self.x,self.y)
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*96,0,96,88,self.x,self.y)
-        self.draw_bb()
         Enemy_Knight.hp_image.clip_draw_to_origin(10,0,10,10,self.x-20+(self.hp/500),100,(self.first_hp-self.hp)/500,10)
         Enemy_Knight.hp_image.clip_draw_to_origin(0,0,10,10,self.x-20,100,(self.hp/500),10)
 
     def dead(self,stage):
         self.dead_frame=int(self.total_frames-self.wait)%9
         if self.dead_frame>=8:
+            self.dead_sound.play(1)
             self.dead_frame = 0
             self.state = self.RUN
             self.x = 800
@@ -90,9 +93,11 @@ class Enemy_Knight:
 
     def attack_damage(self,unit):
         unit.hp -= self.atk
+        self.hit_sound.play(1)
 
     def attack(self):
         self.attack_frame=int(self.total_frames-self.wait)%12
+        self.attack_sound.play(1)
         if self.attack_frame>=11:
             self.attack_frame = 0
             self.state = self.STAND
@@ -131,16 +136,18 @@ class Enemy_Archur:
     hp_image = None
 
     def __init__(self):
-        self.x, self.y = 700, 70
+        self.x, self.y = 700, 60
         self.total_frames = 0.0
         self.state = self.RUN
         self.attack_frame = 0
         self.dead_frame = 0
-        self.atk = 1
+        self.atk = 3000
         self.wait = 0.0
         self.hp = 3000
+        self.hit_sound = load_wav('./bgm/hit.ogg')
         self.attack_num = True
         self.check_dead = False
+        self.dead_sound = load_wav('./bgm/death3.wav')
         if Enemy_Archur.run_image == None:
             Enemy_Archur.run_image = load_image('./image/archur_run.png')
         if Enemy_Archur.stand_image == None:
@@ -190,13 +197,13 @@ class Enemy_Archur:
             self.attack_image.clip_draw(self.attack_frame*50,0,50,72,self.x,self.y)
         elif self.state == self.DEAD:
              self.dead_image.clip_draw(self.dead_frame*48,0,48,72,self.x,self.y)
-        self.draw_bb()
-        Enemy_Archur.hp_image.clip_draw_to_origin(10,0,10,10,self.x-10+(self.hp/500),110,(self.first_hp-self.hp)/500,10)
-        Enemy_Archur.hp_image.clip_draw_to_origin(0,0,10,10,self.x-10,110,(self.hp/500),10)
+        Enemy_Archur.hp_image.clip_draw_to_origin(10,0,10,10,self.x-10+(self.hp/500),100,(self.first_hp-self.hp)/500,10)
+        Enemy_Archur.hp_image.clip_draw_to_origin(0,0,10,10,self.x-10,100,(self.hp/500),10)
 
     def dead(self,stage):
         self.dead_frame=int(self.total_frames-self.wait)%7
         if self.dead_frame>=6:
+            self.dead_sound.play(1)
             self.dead_frame = 0
             self.state = self.RUN
             self.x = 800
@@ -208,6 +215,7 @@ class Enemy_Archur:
             return True
 
     def attack_damage(self,unit):
+        self.hit_sound.play(1)
         unit.hp -= self.atk
 
     def attack(self):
@@ -300,7 +308,6 @@ class Arrow:
     def draw(self):
         if self.state == Arrow.ATTACK:
             self.image.clip_draw(self.draw_frame*80,0,80,80,self.x,self.y)
-            self.draw_bb()
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())

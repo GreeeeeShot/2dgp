@@ -86,6 +86,12 @@ def handle_events(frame_time):
         else:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
+            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_i) and unit.state == Unit.DEAD:
+                unit.hp = mini_map.stage*45000
+                unit.atk = mini_map.stage*5+5
+                unit.first_hp = unit.hp
+                unit.state = unit.STAND
+                unit.dead_frame = 0
             else:
                 unit.handle_event(event)
                 mini_map.handle_event(event,unit)
@@ -140,6 +146,7 @@ def update(frame_time):
         arrow1.arrow_up = True
     if collide(arrow1,unit):
         arrow1.state = arrow1.REST
+        arrow1.y=0
         enemy_archur.attack_damage(unit)
 
     arrow2.update(frame_time)
@@ -151,6 +158,7 @@ def update(frame_time):
         arrow2.arrow_up = True
     if collide(arrow2,unit):
         arrow2.state = arrow2.REST
+        arrow2.y=0
         enemy_archur.attack_damage(unit)
 
     ingame_time.update(frame_time,morale)
@@ -159,6 +167,8 @@ def update(frame_time):
         morale.morale_fail(unit)
     if (morale.state == morale.SUCCESS) and (morale.image != morale.FAIL):
         morale.morale_success(unit)
+    if unit.state == Unit.DEAD :
+        ingame_time.stop()
 
     if mini_map.position_x>=680 and mini_map.stage<4:
         mini_map.stage += 1
@@ -219,7 +229,7 @@ def draw(frame_time):
     ingame_time.draw()
     mini_map.draw()
     count_killed.draw()
-    stage_view.draw(frame_time,mini_map.stage)
+    stage_view.draw(frame_time,mini_map.stage,unit)
     update_canvas()
 
 
