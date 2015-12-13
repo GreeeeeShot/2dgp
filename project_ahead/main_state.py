@@ -186,7 +186,7 @@ def update(frame_time):
         mini_map.speed = 0
         mini_map.total_frames = 0.0
         enemy_knight.x, enemy_knight.y = 700, 70
-        enemy_archur.x, enemy_archur.y = 700, 70
+        enemy_archur.x, enemy_archur.y = 700, 60
         stage_view.total_frame = 0.0
         ingame_time.start_time = -1.0
         ingame_time.total_frames = 0.0
@@ -212,6 +212,8 @@ def update(frame_time):
         background.screen_height = 400
         enemy_knight.first_hp = enemy_knight.hp
         enemy_archur.first_hp = enemy_archur.hp
+
+    if mini_map.position_x>=680 and mini_map.stage==4:
 
 
 

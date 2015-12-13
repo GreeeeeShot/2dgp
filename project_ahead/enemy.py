@@ -28,6 +28,7 @@ class Enemy_Knight:
         self.dead_sound = load_wav('./bgm/death2.wav')
         self.attack_sound = load_wav('./bgm/attack2.wav')
         self.check_dead = False
+        self.hit_sound.set_volume(16)
         if Enemy_Knight.run_image == None:
             Enemy_Knight.run_image = load_image('./image/knight_run.png')
         if Enemy_Knight.stand_image == None:
@@ -141,13 +142,14 @@ class Enemy_Archur:
         self.state = self.RUN
         self.attack_frame = 0
         self.dead_frame = 0
-        self.atk = 3000
+        self.atk = 2
         self.wait = 0.0
         self.hp = 3000
         self.hit_sound = load_wav('./bgm/hit.ogg')
         self.attack_num = True
         self.check_dead = False
         self.dead_sound = load_wav('./bgm/death3.wav')
+        self.hit_sound.set_volume(16)
         if Enemy_Archur.run_image == None:
             Enemy_Archur.run_image = load_image('./image/archur_run.png')
         if Enemy_Archur.stand_image == None:

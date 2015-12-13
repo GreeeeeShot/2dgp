@@ -31,6 +31,7 @@ class Unit:
         self.walk_sound = load_wav('./bgm/walk.wav')
         self.dead_sound = load_wav('./bgm/death1.wav')
         self.attack_sound = load_wav('./bgm/attack1.wav')
+        self.hit_sound.set_volume(16)
         if Unit.run_image == None:
             Unit.run_image = load_image('./image/player_run.png')
         if Unit.stand_image == None:

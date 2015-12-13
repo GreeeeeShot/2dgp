@@ -24,7 +24,7 @@ class Background:
         self.left = 0
         self.screen_width = w
         self.screen_height = h
-        self.bgm1.set_volume(64)
+        self.bgm1.set_volume(128)
         self.bgm1.repeat_play()
 
     def draw(self,stage):
