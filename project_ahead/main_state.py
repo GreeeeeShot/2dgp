@@ -1,6 +1,7 @@
 from pico2d import *
 
 import game_framework
+import ending_state
 
 
 from unit import Unit # import Boy class from boy.py
@@ -92,6 +93,8 @@ def handle_events(frame_time):
                 unit.first_hp = unit.hp
                 unit.state = unit.STAND
                 unit.dead_frame = 0
+            elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_q):
+                mini_map.stage = 4
             else:
                 unit.handle_event(event)
                 mini_map.handle_event(event,unit)
@@ -214,6 +217,7 @@ def update(frame_time):
         enemy_archur.first_hp = enemy_archur.hp
 
     if mini_map.position_x>=680 and mini_map.stage==4:
+        game_framework.push_state(ending_state)
 
 
 

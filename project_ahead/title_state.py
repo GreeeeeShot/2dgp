@@ -2,7 +2,6 @@ import game_framework
 import main_state
 from pico2d import *
 
-
 name = "TitleState"
 image = None
 bgm = None
@@ -16,8 +15,9 @@ def enter():
 
 
 def exit():
-    global image
+    global image, bgm
     del(image)
+    del(bgm)
 
 
 def handle_events(frame_time):
@@ -53,9 +53,3 @@ def pause():
 
 def resume():
     pass
-
-
-
-
-
-

@@ -80,7 +80,7 @@ manifest_template = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 
 mygame = Target(
-    script='mygame.py',
+    script='project_ahead.py',
     dest_base = 'ProjectAhead',
     icon_resources = [(1,r'pico2d.ico')],
 
@@ -96,7 +96,7 @@ py2exe_options = dict(
     dist_dir='dist',
     )
 
-resources = "001.jpg arrow.png".split()
+resources = "".split()
 
 
 
