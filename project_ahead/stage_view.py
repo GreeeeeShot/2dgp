@@ -11,7 +11,7 @@ class Stage_View:
         print("%f"% frame_time)
         self.total_frame+=frame_time
         if self.total_frame < 2:
-            self.font.draw(340,250,"Stage %d" % stage)
+            self.font.draw(340,250,"스테이지 %d" % stage)
         if unit.state==unit.DEAD:
             self.font.draw(300,200,"Game Over")
 
